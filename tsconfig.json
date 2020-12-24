@@ -67,5 +67,10 @@
     "resolveJsonModule": true,                /* Include modules imported with '.json' extension */
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
-  }
+  },
+  "exclude": [
+    "./dist",
+    "./jest.config.js",
+    "./babel.config.js"
+  ]
 }
