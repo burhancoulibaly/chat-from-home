@@ -9,6 +9,7 @@ lerna-debug.log*
 # firebase emulators
 firestore.rules
 database.rules.json
+storage.rules
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
