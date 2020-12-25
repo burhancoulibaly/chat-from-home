@@ -1,25 +1,40 @@
 import * as assert from 'assert';
-import { createAccessToken, verifyToken } from '../backend/auth';
+import { serviceAccount } from './config/config';
+import Auth from '../backend/auth';
 import { firebaseConfig } from './config/config';
 import testFirebaseApp from 'firebase';
 require('firebase/auth')
 
 const testUser1 = "user_test1";
+let auth = new Auth(serviceAccount);
 
 function getFirebaseApp() {
     return testFirebaseApp.initializeApp(firebaseConfig);
 }
 
+beforeAll(async() => {
+
+});
+
+afterAll(async() => {
+
+});
+
+afterEach(async() => {
+
+});
+
 describe("Chat from home backend auth functions", () => {
     it("Returns an access token string when given a username", async() => {
-        expect(await createAccessToken(testUser1));
+    
+        expect(await auth.createAccessToken(testUser1));
     });
 
     it("Returns a valid id token given a valid parameters", async() => {
         const firebaseApp = getFirebaseApp();
 
-        const accessToken = await createAccessToken(testUser1);
-        
+        const accessToken = await auth.createAccessToken(testUser1);
+    
         expect(await firebaseApp.auth().signInWithCustomToken(accessToken));
 
         firebaseApp.delete();
@@ -40,11 +55,11 @@ describe("Chat from home backend auth functions", () => {
     it("Can verify a valid id token", async() => {
         const firebaseApp = getFirebaseApp();
 
-        const accessToken = await createAccessToken(testUser1);
+        const accessToken = await auth.createAccessToken(testUser1);
 
         const tokenResult = await (await firebaseApp.auth().signInWithCustomToken(accessToken)).user?.getIdTokenResult();
 
-        expect(await verifyToken(tokenResult ? tokenResult.token : ""));
+        expect(await auth.verifyToken(tokenResult ? tokenResult.token : ""));
 
         await firebaseApp.delete();
     })
@@ -53,7 +68,7 @@ describe("Chat from home backend auth functions", () => {
         const firebaseApp = getFirebaseApp();
 
         try {
-            await verifyToken("gyuguyg")
+            await auth.verifyToken("gyuguyg")
         } catch (error) {
             expect(error);
         }

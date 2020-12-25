@@ -7,16 +7,8 @@ import { createTestClient } from 'apollo-server-testing';
 import { merge } from 'lodash';
 import { resolvers, typeDefs } from '../backend/resolvers/resolver';
 import { resolvers as authResolver, typeDefs as authTypeDefs } from '../backend/resolvers/auth-resolver';
-import { createAccessToken } from '../backend/auth';
+import Auth from '../backend/auth';
 import AuthDB from '../backend/db';
-
-const getFirestore = (auth: any) => {
-    return firebase.initializeTestApp({projectId: MY_PROJECT_ID, auth: auth}).firestore();
-}
-
-function getAdminFirestore() {
-    return firebase.initializeAdminApp({ projectId: MY_PROJECT_ID }).firestore();
-}
 
 const MY_PROJECT_ID = serviceAccount.projectId;
 const testUser = "user_test";
@@ -26,10 +18,18 @@ const testPassword = "password123";
 const testFakePassword = "fakepassword123";
 const graphqlTestDB = getAdminFirestore();
 
+const getFirestore = (auth: any) => {
+    return firebase.initializeTestApp({projectId: MY_PROJECT_ID, auth: auth}).firestore();
+}
+
+function getAdminFirestore() {
+    return firebase.initializeAdminApp({ projectId: MY_PROJECT_ID }).firestore();
+}
+
 const apolloServer = new ApolloServer({
     typeDefs: [typeDefs, authTypeDefs], 
     resolvers: merge(resolvers, authResolver),
-    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: createAccessToken } })
+    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: new Auth(serviceAccount).createAccessToken } })
 });
 
 const { query, mutate } = createTestClient(apolloServer);

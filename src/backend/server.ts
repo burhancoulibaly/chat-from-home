@@ -7,7 +7,8 @@ import { resolvers as userResolver, typeDefs as userTypeDefs } from './resolvers
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import admin from "firebase-admin";
-import { createAccessToken } from './auth';
+import { serviceAccount } from './config/config';
+import Auth from './auth';
 import AuthDB from './db';
 
 const  app: express.Application = express();
@@ -41,7 +42,7 @@ const db = admin.firestore();
 const apolloServer = new ApolloServer({
   typeDefs: [typeDefs, userTypeDefs], 
   resolvers: merge(resolvers, userResolver),
-  context: async() => ({ db: new AuthDB(db), auth: { createAccessToken: createAccessToken } })
+  context: async() => ({ db: new AuthDB(db), auth: { createAccessToken: new Auth(serviceAccount).createAccessToken } })
 });
 
 app.use(cors())
