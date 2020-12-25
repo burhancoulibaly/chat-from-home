@@ -1,5 +1,7 @@
 {
-  "rulesFile": "database.rules.json",
+  "database": {
+    "rules": "database.rules.json"
+  },
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
@@ -15,20 +17,19 @@
   },
   "emulators": {
     "auth": {
-      "port": 3300
+      "port": 9099
     },
     "functions": {
-      "port": 3400
+      "port": 5001
     },
     "firestore": {
-      "port": 3500
+      "port": 8080
     },
     "database": {
-      "port": 3600
+      "port": 9000
     },
     "ui": {
-      "enabled": true,
-      "port": 3700
+      "enabled": true
     }
   },
   "remoteconfig": {

@@ -21,10 +21,12 @@ export const verifyToken = (idToken: string): Promise<admin.auth.DecodedIdToken>
     return new Promise(async(resolve, reject) => {
         try {
             const res: admin.auth.DecodedIdToken = await admin.auth().verifyIdToken(idToken);
+            
             return resolve(res);
         } catch (error) {
             return reject(error);
         }
     })
 }
+
 

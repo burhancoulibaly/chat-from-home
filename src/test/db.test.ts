@@ -11,19 +11,11 @@ const testPassword ="password123";
 const myAuth = { uid: myId };
 
 const getFirestore = (auth: any) => {
-    const db = firebase.initializeTestApp({projectId: MY_PROJECT_ID, auth: auth}).firestore();
-
-    db.settings({host: "localhost:3500", ssl: false});
-
-    return db;
+    return firebase.initializeTestApp({projectId: MY_PROJECT_ID, auth: auth}).firestore();
 }
 
 function getAdminFirestore() {
-    const admin = firebase.initializeAdminApp({ projectId: MY_PROJECT_ID }).firestore();
-
-    admin.settings({host: "localhost:3500", ssl: false});
-
-    return admin;
+    return firebase.initializeAdminApp({ projectId: MY_PROJECT_ID }).firestore();
 }
 
 describe("Chat from home db", () => {
