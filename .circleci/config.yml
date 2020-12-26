@@ -5,7 +5,7 @@ orbs:
 jobs:
   test:
     docker:
-      - image: cimg/node:12.20.0
+      - image: cimg/node:10.21.0
         auth:
           username: burhancoulibaly
           password: $DOCKERHUB_PASSWORD
