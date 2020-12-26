@@ -2,19 +2,25 @@ version: 2.1
 orbs:
   node: circleci/node@3.0.0
   openjdk-install: cloudesire/openjdk-install@1.2.3
-  java11: drift/java11@0.1.1
-
 jobs:
   test:
     docker:
-      - image: cimg/node:10.21.0
+      - image: cimg/openjdk:15.0
         auth:
           username: burhancoulibaly
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - java11/install-java11-and-maven36
       - node/install-packages
+      # - run:
+      #     name: "add openjdk repo"
+      #     command: |
+      #       sudo add-apt-repository ppa:openjdk-r/ppa
+      #       sudo apt-get update
+      # - run:
+      #     name: "install openjdk"
+      #     command: |
+      #       sudo apt-get install default-jdk
       - run:
           name: "Install firebase tools"
           command: |
