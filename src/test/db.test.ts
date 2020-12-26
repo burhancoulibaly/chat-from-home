@@ -10,8 +10,6 @@ const testEmail = "user.test@gmail.com";
 const testPassword ="password123";
 const myAuth = { uid: myId };
 
-console.log(serviceAccount.projectId, serviceAccount.clientEmail);
-
 const getFirestore = (auth: any) => {
     return firebase.initializeTestApp({projectId: MY_PROJECT_ID, auth: auth}).firestore();
 }
