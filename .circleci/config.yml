@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@3.0.0
   openjdk-install: cloudesire/openjdk-install@1.2.3
+  rsync: germade/rsync@0.0.1
 
 jobs:
   test:
@@ -12,6 +13,7 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
+      - rsync/rsync_deploy
       - openjdk-install/openjdk
       - node/install-packages
       - run:
