@@ -21,4 +21,13 @@ jobs:
           command: |
             firebase emulators:exec --only firestore "npm test"
 
+workflows:
+  Chat_From_Home_Test:
+    jobs:
+      - test
+      - build-job:
+          requires:
+            - test
+
+
 
