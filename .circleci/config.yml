@@ -8,7 +8,7 @@ workflows:
         - run:
             name: Starts firebase emulators
             command: |
-              firebase emulators:Starts
+              firebase emulators:start
         - run:
             name: Starts tests
             command: |
