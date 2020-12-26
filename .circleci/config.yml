@@ -25,7 +25,9 @@ jobs:
 workflows:
   Chat_From_Home_Test:
     jobs:
-      - test
+      - test:
+          requires:
+            openjdk-install
       - node/test:
           requires:
             - test
