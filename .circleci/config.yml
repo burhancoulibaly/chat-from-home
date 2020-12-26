@@ -15,8 +15,8 @@ jobs:
       - run:
           name: "rsync"
           command: |
-            systemctl start rsync
-      - openjdk-install/openjdk
+            sudo apt install java
+      # - openjdk-install/openjdk
       - node/install-packages
       - run:
           name: "Install firebase tools"
