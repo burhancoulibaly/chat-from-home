@@ -45,7 +45,7 @@ const apolloServer = new ApolloServer({
   context: async() => ({ db: new AuthDB(db), auth: { createAccessToken: new Auth({
     projectId: `${process.env.PROJECT_ID}`,
     clientEmail: `${process.env.CLIENT_EMAIL}`,
-    privateKey: `${process.env.PRIVATE_KEY};`
+    privateKey: `${process.env.PRIVATE_KEY?.replace(/\\n/g, '\n')};`
   }).createAccessToken } })
 });
 
