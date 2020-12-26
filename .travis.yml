@@ -6,4 +6,5 @@ before_install:
 script:
   # ... your existing test scripts...
   # And add the line below to the end:
-  - firebase emulators:start --project your-project-id 'npm test'
+  - firebase emulators:start
+  - npm test
