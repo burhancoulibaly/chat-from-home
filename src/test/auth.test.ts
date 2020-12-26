@@ -8,8 +8,6 @@ require('firebase/auth')
 const testUser1 = "user_test1";
 let auth = new Auth(serviceAccount);
 
-console.log(serviceAccount.projectId, serviceAccount.clientEmail);
-
 function getFirebaseApp() {
     return testFirebaseApp.initializeApp(firebaseConfig);
 }
