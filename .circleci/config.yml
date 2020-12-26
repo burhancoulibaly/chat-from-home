@@ -6,11 +6,11 @@ workflows:
     jobs:
       steps:
         - run:
-            name: Starts firebase emulators
-            command: |
-              firebase emulators:start
+          name: Starts firebase emulators
+          command: |
+            firebase emulators:start
         - run:
-            name: Starts tests
-            command: |
-              npm test
+          name: Starts tests
+          command: |
+            npm test
               
