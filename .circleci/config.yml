@@ -4,9 +4,13 @@ orbs:
 workflows:
   node-tests:
     jobs:
-      build:
-        steps:
-          - run: 
-              name: "start test"
-              command: |
-                npm test
+      steps:
+        - run:
+            name: Starts firebase emulators
+            command: |
+              firebase emulators:Starts
+        - run
+            name: Starts tests
+            command: |
+              npm test
+              
