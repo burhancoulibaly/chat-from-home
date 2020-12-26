@@ -6,6 +6,7 @@ workflows:
     jobs:
       - node/test
     steps:
+      - checkout
       - run: 
           name: "start firebase emulators"
           command: |
