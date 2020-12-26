@@ -3,14 +3,15 @@ orbs:
   node: circleci/node@3.0.0
 workflows:
   node-tests:
-    jobs:
-      steps:
-        - run:
-          name: Starts firebase emulators
-          command: |
-            firebase emulators:start
-        - run:
-          name: Starts tests
-          command: |
-            npm test
+    build:
+      jobs:
+        steps:
+          - run:
+              name: Starts firebase emulators
+              command: |
+                firebase emulators:start
+          - run:
+              name: Starts tests
+              command: |
+                npm test
               
