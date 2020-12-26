@@ -1,6 +1,6 @@
 version: 2.1
-orbs:
-  circleci/node@4.1.0
+# orbs:
+#   circleci/node@4.1.0
 
 jobs:
   test:
@@ -11,7 +11,10 @@ jobs:
             password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - node/install-packages
+      - run:
+          name: "npm install"
+          command: |
+            npm install
       - run:
           name: "Install firebase tools"
           command: |
