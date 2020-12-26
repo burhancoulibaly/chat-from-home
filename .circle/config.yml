@@ -1,0 +1,24 @@
+version: 2.1
+orbs:
+  circleci/node@4.1.0
+
+jobs:
+  test:
+    docker:
+      - image: cimg/node:<node-version>
+          auth:
+            username: burhancoulibaly
+            password: $DOCKERHUB_PASSWORD
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: "Install firebase tools"
+          command: |
+            curl -sL https://firebase.tools | bash
+      - run:
+          name: "Start firebase emulators and test"
+          command: |
+            firebase emulators:exec --only firestore "npm test"
+
+
