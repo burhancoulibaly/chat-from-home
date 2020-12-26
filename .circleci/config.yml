@@ -9,7 +9,7 @@ workflows:
             name: Starts firebase emulators
             command: |
               firebase emulators:Starts
-        - run
+        - run:
             name: Starts tests
             command: |
               npm test
