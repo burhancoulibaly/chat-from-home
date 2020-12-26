@@ -6,11 +6,7 @@ import testFirebaseApp from 'firebase';
 require('firebase/auth')
 
 const testUser1 = "user_test1";
-let auth = new Auth({
-    projectId: `${process.env.PROJECT_ID}`,
-    clientEmail: `${process.env.CLIENT_EMAIL}`,
-    privateKey: `${process.env.PRIVATE_KEY?.replace(/\\n/gm, '\n')}`
-});
+let auth = new Auth(serviceAccount);
 
 function getFirebaseApp() {
     return testFirebaseApp.initializeApp(firebaseConfig);

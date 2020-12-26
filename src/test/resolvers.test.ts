@@ -7,8 +7,8 @@ import { createTestClient } from 'apollo-server-testing';
 import { merge } from 'lodash';
 import { resolvers, typeDefs } from '../backend/resolvers/resolver';
 import { resolvers as authResolver, typeDefs as authTypeDefs } from '../backend/resolvers/auth-resolver';
-import AuthDB from '../backend/db';
 import Auth from '../backend/auth';
+import AuthDB from '../backend/db';
 
 const MY_PROJECT_ID = serviceAccount.projectId;
 const testUser = "user_test";
@@ -29,11 +29,7 @@ function getAdminFirestore() {
 const apolloServer = new ApolloServer({
     typeDefs: [typeDefs, authTypeDefs], 
     resolvers: merge(resolvers, authResolver),
-    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: new Auth({
-        projectId: `${process.env.PROJECT_ID}`,
-        clientEmail: `${process.env.CLIENT_EMAIL}`,
-        privateKey: `${process.env.PRIVATE_KEY?.replace(/\\n/gm, '\n')}`
-    }).createAccessToken } })
+    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: new Auth(serviceAccount).createAccessToken } })
 });
 
 const { query, mutate } = createTestClient(apolloServer);

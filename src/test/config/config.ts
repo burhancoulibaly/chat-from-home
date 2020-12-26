@@ -18,5 +18,5 @@ export const firebaseConfig =  {
 export const serviceAccount: ServiceAccount =  {
     projectId: `${process.env.PROJECT_ID}`,
     clientEmail: `${process.env.CLIENT_EMAIL}`,
-    privateKey: `${process.env.PRIVATE_KEY};`
+    privateKey: `${JSON.parse(process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : "")}`
 }
