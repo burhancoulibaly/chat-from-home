@@ -42,11 +42,7 @@ const db = admin.firestore();
 const apolloServer = new ApolloServer({
   typeDefs: [typeDefs, userTypeDefs], 
   resolvers: merge(resolvers, userResolver),
-  context: async() => ({ db: new AuthDB(db), auth: { createAccessToken: new Auth({
-    projectId: `${process.env.PROJECT_ID}`,
-    clientEmail: `${process.env.CLIENT_EMAIL}`,
-    privateKey: `${process.env.PRIVATE_KEY?.replace(/\\n/g, '\n')};`
-  }).createAccessToken } })
+  context: async() => ({ db: new AuthDB(db), auth: { createAccessToken: new Auth({serviceAccount}).createAccessToken } })
 });
 
 app.use(cors())

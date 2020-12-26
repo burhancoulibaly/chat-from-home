@@ -29,7 +29,11 @@ function getAdminFirestore() {
 const apolloServer = new ApolloServer({
     typeDefs: [typeDefs, authTypeDefs], 
     resolvers: merge(resolvers, authResolver),
-    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: new Auth(serviceAccount).createAccessToken } })
+    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: new Auth({
+        projectId: `${process.env.PROJECT_ID}`,
+        clientEmail: `${process.env.CLIENT_EMAIL}`,
+        privateKey: `${process.env.PRIVATE_KEY?.replace(/\\n/gm, '\n')};`
+    }).createAccessToken } })
 });
 
 const { query, mutate } = createTestClient(apolloServer);
