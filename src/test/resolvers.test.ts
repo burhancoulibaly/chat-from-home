@@ -32,7 +32,7 @@ const apolloServer = new ApolloServer({
     context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: new Auth({
         projectId: `${process.env.PROJECT_ID}`,
         clientEmail: `${process.env.CLIENT_EMAIL}`,
-        privateKey: `${process.env.PRIVATE_KEY?.replace(/\\n/g, '\n')};`
+        privateKey: `${process.env.PRIVATE_KEY};`
     }).createAccessToken } })
 });
 
