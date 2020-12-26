@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - 12
+before_install:
+  - curl -sL https://firebase.tools | bash
+script:
+  # ... your existing test scripts...
+  # And add the line below to the end:
+  - firebase emulators:start --project your-project-id 'npm test'
