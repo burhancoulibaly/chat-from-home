@@ -5,7 +5,8 @@ module.exports = {
     roots: ['<rootDir>'], 
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     testPathIgnorePatterns: [
-        "./dist",
+        // "./dist",
+        "./src"
         // "./src/test/auth.test.ts",
         // "./src/test/resolvers.test.ts"
     ] 
