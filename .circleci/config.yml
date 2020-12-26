@@ -1,13 +1,12 @@
 version: 2.1
-# orbs:
-#   node: circleci/node@3.0.0
+orbs:
+  node: circleci/node@3.0.0
 workflows:
   node-tests:
-    jobs:
-      build:
-        docker:
-          - image: cimg/node:15.5.0
+    build:
+      jobs:
         steps:
+          - checkout
           - run:
               name: Starts firebase emulators
               command: |
