@@ -7,8 +7,8 @@ import { createTestClient } from 'apollo-server-testing';
 import { merge } from 'lodash';
 import { resolvers, typeDefs } from '../backend/resolvers/resolver';
 import { resolvers as authResolver, typeDefs as authTypeDefs } from '../backend/resolvers/auth-resolver';
-import Auth from '../backend/auth';
 import AuthDB from '../backend/db';
+import Auth from '../backend/auth';
 
 const MY_PROJECT_ID = serviceAccount.projectId;
 const testUser = "user_test";
