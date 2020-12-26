@@ -15,8 +15,14 @@ export const firebaseConfig =  {
     measurementId: `${process.env.MEASUREMENTID}`
 }
 
+let buffer;
+
+if(process.env.PRIVATE_KEY){
+    buffer = Buffer.from(process.env.PRIVATE_KEY)
+}
+
 export const serviceAccount: ServiceAccount =  {
     projectId: `${process.env.PROJECT_ID}`,
     clientEmail: `${process.env.CLIENT_EMAIL}`,
-    privateKey: `${process.env.PRIVATE_KEY?.replace(/\n/g,'\n')}`
+    privateKey: `${buffer?.toString("ascii").replace(/\\n/g, '\n')}`
 }
