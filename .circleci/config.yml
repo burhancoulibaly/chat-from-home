@@ -13,7 +13,7 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - rsync/rsync_deploy
+      - rsync/rsync
       - openjdk-install/openjdk
       - node/install-packages
       - run:
