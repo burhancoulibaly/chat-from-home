@@ -12,6 +12,10 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
+      - run:
+          name: "rsync"
+          command: |
+            sudo apt install rsync
       - openjdk-install/openjdk
       - node/install-packages
       - run:
