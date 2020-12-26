@@ -8,9 +8,9 @@ workflows:
       build:
         steps:
           - run: 
-              name: "start firebase emulators"
-              command: |
-                firebase emulators:start
+              # name: "start firebase emulators"
+              # command: |
+              #   firebase emulators:start
               name: "start test"
               command: |
                 npm test
