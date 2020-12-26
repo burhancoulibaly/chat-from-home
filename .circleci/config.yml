@@ -20,7 +20,7 @@ jobs:
       - run:
           name: "add openjdk repo"
           command: |
-            sudo apt-get install openjdk
+            sudo apt-get install default-jdk
       - run:
           name: "Install firebase tools"
           command: |
