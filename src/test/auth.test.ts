@@ -9,7 +9,7 @@ const testUser1 = "user_test1";
 let auth = new Auth({
     projectId: `${process.env.PROJECT_ID}`,
     clientEmail: `${process.env.CLIENT_EMAIL}`,
-    privateKey: `${JSON.parse(process.env.PRIVATE_KEY ? process.env.PRIVATE_KEY : "")}`
+    privateKey: `${process.env.PRIVATE_KEY?.replace(/\\n/gm, '\n')}`
 });
 
 function getFirebaseApp() {
