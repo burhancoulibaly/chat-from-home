@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@3.0.0
   openjdk-install: cloudesire/openjdk-install@1.2.3
+  java11: drift/java11@0.1.1
 
 jobs:
   test:
@@ -12,14 +13,7 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
-      - run:
-          name: "Install rsync"
-          command: |
-            sudo wget https://launchpad.net/rsync/main/3.0.7/+download/rsync-3.0.7.tar.gz
-            tar -zxvf rsync-3.0.7.tar.gz
-            ./rsync-3.0.7/configure
-            make prefix=./rsync-3.0.7
-      - openjdk-install/openjdk
+      - java11/install-java11-and-maven36
       - node/install-packages
       - run:
           name: "Install firebase tools"
