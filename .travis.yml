@@ -1,9 +1,0 @@
-language: node_js
-node_js:
-  - 13
-before_install:
-  - curl -sL https://firebase.tools | bash
-script:
-  # ... your existing test scripts...
-  # And add the line below to the end:
-  - firebase emulators:exec --only firestore "npm test"
