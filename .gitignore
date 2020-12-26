@@ -6,10 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# firebase emulators
-# firestore.rules
-database.rules.json
-storage.rules
+# firebaserc
 .firebaserc
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
