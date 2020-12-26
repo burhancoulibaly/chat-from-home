@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as firebase from '@firebase/testing';
 import { hash, genSalt } from 'bcrypt';
 import { serviceAccount } from './config/config';
-console.log("JIJJ")
+
 const MY_PROJECT_ID = serviceAccount.projectId;
 const myId = "me_test";
 const testUser = "user_test";
