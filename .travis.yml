@@ -6,4 +6,4 @@ before_install:
 script:
   # ... your existing test scripts...
   # And add the line below to the end:
-  - firebase emulators:exec "./npm test"
+  - firebase emulators:exec --only firestore "npm test"
