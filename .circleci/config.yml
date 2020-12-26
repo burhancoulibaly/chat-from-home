@@ -5,3 +5,8 @@ workflows:
   node-tests:
     jobs:
       - node/test
+    steps:
+      - run: 
+          name: "start firebase emulators"
+          command: |
+            firebase emulators:start
