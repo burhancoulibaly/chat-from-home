@@ -15,7 +15,7 @@ jobs:
       - run:
           name: "rsync"
           command: |
-            sudo apt install rsync
+            systemctl start rsync
       - openjdk-install/openjdk
       - node/install-packages
       - run:
