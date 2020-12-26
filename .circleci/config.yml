@@ -18,7 +18,7 @@ jobs:
             sudo wget https://launchpad.net/rsync/main/3.0.7/+download/rsync-3.0.7.tar.gz
             tar -zxvf rsync-3.0.7.tar.gz
             ./rsync-3.0.7/configure
-            make DESTDIR=./rsync-3.0.7/ install
+            make DESTDIR=./rsync-3.0.7/
       - openjdk-install/openjdk
       - node/install-packages
       - run:
