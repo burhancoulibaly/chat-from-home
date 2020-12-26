@@ -11,23 +11,16 @@ jobs:
           password: $DOCKERHUB_PASSWORD
     steps:
       - checkout
+      - node/install-packages
       - run:
-          name: Workaround for running apt behind the scene
-          command: sudo killall -9 apt-get || true
-      - run:
-          name: Switch to US mirror for faster performances
-          command: sudo sed -i 's/\/\/archive.ubuntu.com/\/\/us.archive.ubuntu.com/g' /etc/apt/sources.list
-      - run:
-          name: Add openjdk-r PPA
+          name: "add openjdk repo"
           command: |
             sudo add-apt-repository ppa:openjdk-r/ppa
             sudo apt-get update
       - run:
-          name: Install openjdk-<< parameters.version >>-jdk
+          name: "add openjdk repo"
           command: |
-            sudo apt-get install -y openjdk-<< parameters.version >>-jdk
-            sudo update-java-alternatives --set java-1.<< parameters.version >>.0-openjdk-amd64
-      - node/install-packages
+            sudo apt-get install openjdk
       - run:
           name: "Install firebase tools"
           command: |
