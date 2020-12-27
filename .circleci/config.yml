@@ -1,7 +1,6 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
-  openjdk-install: cloudesire/openjdk-install@1.2.3
 jobs:
   test:
     docker:
@@ -12,23 +11,10 @@ jobs:
     steps:
       - checkout
       - node/install-packages
-      # - run:
-      #     name: "add openjdk repo"
-      #     command: |
-      #       sudo add-apt-repository ppa:openjdk-r/ppa
-      #       sudo apt-get update
-      # - run:
-      #     name: "install openjdk"
-      #     command: |
-      #       sudo apt-get install default-jdk
       - run:
           name: "Install firebase tools"
           command: |
             sudo npm install -g firebase-tools
-      - run:
-          name: "run build"
-          command: |
-            npm run build
       - run:
           name: "Start firebase emulators and test"
           command: |
