@@ -4,10 +4,7 @@ module.exports = {
     verbose: true,
     roots: ['<rootDir>'], 
     testPathIgnorePatterns: [
-        // "./dist",
-        // "./src"
-        // "./src/test/auth.test.ts",
-        // "./src/test/resolvers.test.ts"
+        "./dist",
     ] 
 }
 
