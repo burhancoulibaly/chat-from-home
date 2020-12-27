@@ -30,6 +30,8 @@ let corsOptions = {
   credentials: true
 }
 
+admin.initializeApp(serviceAccount);
+
 const db = admin.firestore();
 
 //integrating graphql settings
