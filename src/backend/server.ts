@@ -15,13 +15,7 @@ const  app: express.Application = express();
 const server: any = require('http').createServer(app);
 
 //Urls that are allowed to connect to the api
-let whitelist: Array<string>;
-
-if(!process.env.NODE_ENV || process.env.NODE_ENV === "development"){
-  whitelist = ['http://localhost:3000', 'http://localhost:3000/graphql', 'http://localhost:4200', 'http://localhost:3200'];
-}else{
-  whitelist = [''];
-}
+let whitelist: Array<string> = ['https://chatfromhome.io'];
 
 let corsOptions = {
   //Checks if origin is in whitelist if not an error is returned
@@ -45,7 +39,12 @@ const apolloServer = new ApolloServer({
   context: async() => ({ db: new AuthDB(db), auth: { createAccessToken: new Auth({serviceAccount}).createAccessToken } })
 });
 
-app.use(cors())
+if(!process.env.NODE_ENV || process.env.NODE_ENV === "development"){
+  app.use(cors())
+}else{
+  app.use(cors(corsOptions))
+}
+
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
