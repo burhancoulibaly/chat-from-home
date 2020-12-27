@@ -14,7 +14,7 @@ export default class AuthDB{
                 let snapshot = await this._db.collection('login').doc(username).get();
 
                 let response = snapshot.data();
-    
+
                 if(!response){
                     throw new Error("Invalid login");
                 }
@@ -49,7 +49,7 @@ export default class AuthDB{
                 }
 
                 response = (await emailRef.get()).data();
-
+                
                 if(response){
                     throw new Error('An account is already associated with this email');
                 }
