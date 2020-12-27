@@ -29,13 +29,14 @@ let corsOptions = {
   credentials: true
 }
 
-export const db = admin.initializeApp({ credential: admin.credential.cert(serviceAccount) }).firestore();
+export const adminApp = admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+export const auth = new Auth()
 
 //integrating graphql settings
 export const apolloServer = new ApolloServer({
   typeDefs: [typeDefs, userTypeDefs], 
   resolvers: merge(resolvers, userResolver),
-  context: async() => ({ db: new AuthDB(db), auth: { createAccessToken: new Auth({serviceAccount}).createAccessToken } })
+  context: async() => ({ db: new AuthDB(adminApp.firestore()), auth: { createAccessToken: auth.createAccessToken } })
 });
 
 if(!process.env.NODE_ENV || process.env.NODE_ENV === "production"){

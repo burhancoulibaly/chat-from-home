@@ -1,12 +1,18 @@
 import admin from 'firebase-admin';
 
 export default class Auth{
-    constructor(serviceAccount: any){
-        if(!admin.apps.length){
-            admin.initializeApp({
-                credential: admin.credential.cert(serviceAccount)
-            })
+    constructor(serviceAccount: any = null){
+        if(serviceAccount){
+            if(!admin.apps.length){
+                admin.initializeApp({
+                    credential: admin.credential.cert(serviceAccount)
+                })
+            }
         }
+    }
+
+    public getAdmin = () => {
+        return admin
     }
 
     public createAccessToken = (username: string): Promise<string> => {
