@@ -30,9 +30,7 @@ let corsOptions = {
   credentials: true
 }
 
-admin.initializeApp(serviceAccount);
-
-const db = admin.firestore();
+const db = admin.initializeApp({ credential: admin.credential.cert(serviceAccount) }).firestore();
 
 //integrating graphql settings
 const apolloServer = new ApolloServer({

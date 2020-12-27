@@ -12,6 +12,7 @@ export default class AuthDB{
         return new Promise(async (resolve, reject) => {
             try {
                 let snapshot = await this._db.collection('login').doc(username).get();
+
                 let response = snapshot.data();
     
                 if(!response){

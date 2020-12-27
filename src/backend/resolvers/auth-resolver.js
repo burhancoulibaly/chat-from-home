@@ -30,6 +30,7 @@ export const resolvers = {
                     message: "Login successful",
                     accessToken: `${await auth.createAccessToken(username)}`
                 }
+
             } catch (error) {
                 return {
                     status: error.toString().split(":")[0].replace(" ",""),
