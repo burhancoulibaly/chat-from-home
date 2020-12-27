@@ -5,11 +5,7 @@ afterAll(async() => {
 });
 
 describe("Test Chat From Home server", () => {
-    it("Creates a valid db instance", async() => {
+    it("Creates a valid admin instance", async() => {
         expect(await adminApp.options.credential?.getAccessToken())
-    })
-
-    it("Creates a valid db instance", async() => {
-        expect(await auth.getAdmin().app().options.credential?.getAccessToken())
     })
 });
