@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "start:dev": "nodemon",
+    "start:socketio": "nodemon --exec NODE_ENV=development ts-node ./src/backend/socket.io-handler.ts",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/src/backend/server.js",
     "lint": "eslint . --ext .ts"
@@ -21,6 +22,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/firebase": "^3.2.1",
     "@types/jsonwebtoken": "^8.5.0",
+    "@types/socket.io": "^2.1.12",
     "@types/swagger-jsdoc": "^3.0.2",
     "@types/swagger-ui-express": "^4.1.2",
     "add": "^2.0.6",
@@ -43,6 +45,8 @@
     "lodash": "^4.17.20",
     "npm": "^7.3.0",
     "path": "^0.12.7",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.1",
     "ts-jest": "^26.4.4"
   },
   "devDependencies": {
@@ -52,6 +56,7 @@
     "@types/jest": "^26.0.19",
     "@types/lodash": "^4.14.165",
     "@types/node": "^14.14.16",
+    "@types/socket.io-client": "^1.4.34",
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
