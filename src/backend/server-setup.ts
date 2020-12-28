@@ -15,19 +15,14 @@ import path from 'path'
 export const  app: express.Application = express();
 
 //Urls that are allowed to connect to the api
-let whitelist: Array<any>;
-
-if(process.env.NODE_ENV === "production"){
-  whitelist = ['https://chatfromhome.io'];
-}else{
-  whitelist = ['http://localhost:3000', 'localhost:3000', 'http://localhost:3001'];
-}
+// let whitelist: Array<string> = ['https://chatfromhome.io'];
+let whitelist: Array<string> = ['http://localhost:3000', 'localhost:3000', 'http://localhost:3001', 'localhost:3001', 'localhost'];
 
 let corsOptions = {
   //Checks if origin is in whitelist if not an error is returned
   origin: function (origin: any, callback: any) {
-    // console.log(origin)
-    if (whitelist.indexOf(origin) !== -1 || (!process.env.NODE_ENV || process.env.NODE_ENV === "development")) {
+    console.log(origin)
+    if (whitelist.indexOf(origin) !== -1) {
         callback(null, true)
     } else {
         callback(new Error('Not allowed by CORS'))
@@ -46,7 +41,12 @@ export const apolloServer = new ApolloServer({
   context: async() => ({ db: new AuthDB(adminApp.firestore()), auth: { createAccessToken: auth.createAccessToken } })
 });
 
-app.use(cors(corsOptions))
+if(!process.env.NODE_ENV || process.env.NODE_ENV === "production"){
+  app.use(cors(corsOptions))
+}else{
+  app.use(cors())
+}
+
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -55,7 +55,3 @@ apolloServer.applyMiddleware({
   app,
   cors: false
 });
-
-app.get('/', (req, res) => {
-  res.sendFile(path.resolve('./src/backend/index.html'));
-})
