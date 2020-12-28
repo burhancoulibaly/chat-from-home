@@ -6,7 +6,6 @@
   "scripts": {
     "test": "jest",
     "start:dev": "nodemon",
-    "start:socketio": "nodemon --exec NODE_ENV=development ts-node ./src/backend/socket.io-handler.ts",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/src/backend/server.js",
     "lint": "eslint . --ext .ts"
