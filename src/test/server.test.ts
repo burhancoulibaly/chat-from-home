@@ -12,7 +12,7 @@ let ioServer: any;
 // const request = supertest(app);
 
 beforeAll((done) => {
-    server = require('http').createServer(app).listen(3001);
+    server = require('http').createServer(app).listen(process.env.PORT ? process.env.PORT + 1 : 3001);
     serverAddr = server.address();
     ioServer = SocketConnection.GetSocket(server);
     
@@ -32,8 +32,8 @@ beforeEach((done) => {
     // Do not hardcode server port and address, square brackets are used for IPv6
     const address = serverAddr.address
     const port = serverAddr.port
-    
-    socket = io.connect(`http://localhost:3001`);
+    console.log(address, port)
+    socket = io.connect(`http://[${address}]:${port}`);
     socket.on('connect', () => {
         done();
     });
