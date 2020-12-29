@@ -32,8 +32,8 @@ beforeEach((done) => {
     // Do not hardcode server port and address, square brackets are used for IPv6
     const address = serverAddr.address
     const port = serverAddr.port
-
-    socket = io.connect(`http://localhost:${port}`);
+    console.log(address, port)
+    socket = io.connect(`http://[::]:${port}`);
     console.log(socket)
     socket.on('connect', () => {
         done();
