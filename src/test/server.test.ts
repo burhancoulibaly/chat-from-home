@@ -33,7 +33,7 @@ beforeEach((done) => {
     const address = serverAddr.address
     const port = serverAddr.port
 
-    socket = io.connect(`http://[${address}]:${port}`);
+    socket = io.connect(`http://localhost:${port}`);
     console.log(socket)
     socket.on('connect', () => {
         done();
