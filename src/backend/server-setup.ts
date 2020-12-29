@@ -15,14 +15,13 @@ import path from 'path'
 export const  app: express.Application = express();
 
 //Urls that are allowed to connect to the api
-// let whitelist: Array<string> = ['https://chatfromhome.io'];
-let whitelist: Array<string> = ['http://localhost:3000', 'localhost:3000', 'http://localhost:3001', 'localhost:3001', 'localhost'];
+let whitelist: Array<any> = ['https://chatfromhome.io'];
 
 let corsOptions = {
   //Checks if origin is in whitelist if not an error is returned
   origin: function (origin: any, callback: any) {
-    console.log(origin)
-    if (whitelist.indexOf(origin) !== -1) {
+    // console.log(origin)
+    if (whitelist.indexOf(origin) !== -1 || (!process.env.NODE_ENV || process.env.NODE_ENV === "development")) {
         callback(null, true)
     } else {
         callback(new Error('Not allowed by CORS'))
@@ -41,12 +40,7 @@ export const apolloServer = new ApolloServer({
   context: async() => ({ db: new AuthDB(adminApp.firestore()), auth: { createAccessToken: auth.createAccessToken } })
 });
 
-if(!process.env.NODE_ENV || process.env.NODE_ENV === "production"){
-  app.use(cors(corsOptions))
-}else{
-  app.use(cors())
-}
-
+app.use(cors(corsOptions))
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

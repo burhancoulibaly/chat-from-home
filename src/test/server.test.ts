@@ -32,9 +32,9 @@ beforeEach((done) => {
     // Do not hardcode server port and address, square brackets are used for IPv6
     const address = serverAddr.address
     const port = serverAddr.port
-    console.log(address, port)
-    socket = io.connect(`http://[::]:${port}`);
-    console.log(socket)
+
+    socket = io.connect(`http://${process.env.CIRCLECI ? '127.0.0.1' : `[${address}]`}:${port}`);
+
     socket.on('connect', () => {
         done();
     });
