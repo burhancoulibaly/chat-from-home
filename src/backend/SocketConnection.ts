@@ -2,7 +2,7 @@ import * as socketio from "socket.io";
 
 export default class SocketConnection {
     private static _instance: SocketConnection | null;
-    server: any;
+    public server: any;
 
     private constructor(server: any) {
         this.server = server;
@@ -34,7 +34,7 @@ export default class SocketConnection {
         return this._instance;
     }
 
-    public static Close() {
+    public static close() {
         this._instance = null;
     }
 }

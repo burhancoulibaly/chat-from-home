@@ -15,13 +15,13 @@ beforeAll((done) => {
     server = require('http').createServer(app).listen(process.env.PORT ? process.env.PORT + 1 : 3001);
     serverAddr = server.address();
     ioServer = SocketConnection.GetSocket(server);
-    console.log(server);
+    
     done();
 })
 
 afterAll((done) => {
     ioServer.close();
-    SocketConnection.Close();
+    SocketConnection.close();
     server.close();
     
     done();
@@ -32,8 +32,9 @@ beforeEach((done) => {
     // Do not hardcode server port and address, square brackets are used for IPv6
     const address = serverAddr.address
     const port = serverAddr.port
-    console.log(address, port)
+
     socket = io.connect(`http://[${address}]:${port}`);
+    console.log(socket)
     socket.on('connect', () => {
         done();
     });
@@ -79,5 +80,4 @@ describe("Test socket.io on server", () => {
             
         }, 50);
     });
-    
 })
