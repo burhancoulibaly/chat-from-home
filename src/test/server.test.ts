@@ -33,6 +33,7 @@ beforeEach((done) => {
     const address = serverAddr.address
     const port = serverAddr.port
 
+    //circleci doesn't support IPv6
     socket = io.connect(`http://${process.env.CIRCLECI ? '127.0.0.1' : `[${address}]`}:${port}`);
 
     socket.on('connect', () => {
