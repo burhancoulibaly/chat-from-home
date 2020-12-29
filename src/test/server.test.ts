@@ -15,7 +15,7 @@ beforeAll((done) => {
     server = require('http').createServer(app).listen(process.env.PORT ? process.env.PORT + 1 : 3001);
     serverAddr = server.address();
     ioServer = SocketConnection.GetSocket(server);
-    console.log(ioServer);
+    console.log(server);
     done();
 })
 
