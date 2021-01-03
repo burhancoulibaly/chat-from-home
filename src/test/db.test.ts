@@ -95,7 +95,7 @@ describe("Chat from home db", () => {
         admin.app.delete();
     });
 
-    it("Doesn't let users read login and user collection", async() => {
+    it("Doesn't let users read other users login and user collection", async() => {
         const admin = getAdminFirestore();
         const db = getFirestore(myAuth);
         
@@ -116,6 +116,42 @@ describe("Chat from home db", () => {
         emailRef = db.collection("email").doc(testEmail);
 
         await firebase.assertFails(userRef.get());
+        await firebase.assertFails(loginRef.get());
+        await firebase.assertFails(emailRef.get());
+
+        userRef = admin.collection("user").doc(testUser);
+        loginRef = admin.collection("login").doc(testUser);
+        emailRef = admin.collection("email").doc(testEmail);
+
+        await userRef.delete();
+        await loginRef.delete();
+        await emailRef.delete();
+
+        admin.app.delete();
+        db.app.delete();
+    });
+
+    it("Lets users read their own user document", async() => {
+        const admin = getAdminFirestore();
+        const db = getFirestore({uid: testUser});
+        
+        let userRef = admin.collection("user").doc(testUser);
+        let loginRef = admin.collection("login").doc(testUser);
+        let emailRef = admin.collection("email").doc(testEmail);
+
+        const saltRounds = 12;
+        const salt = await genSalt(saltRounds);
+        const hashedPassword = await hash(testPassword,salt);
+
+        await userRef.set({ email: `${testEmail}`, username: `${testUser}` });
+        await loginRef.set({ password: `${hashedPassword}` });
+        await emailRef.set({ username: `${testUser}` });
+
+        userRef = db.collection("user").doc(testUser);
+        loginRef = db.collection("login").doc(testUser);
+        emailRef = db.collection("email").doc(testEmail);
+
+        await firebase.assertSucceeds(userRef.get());
         await firebase.assertFails(loginRef.get());
         await firebase.assertFails(emailRef.get());
 

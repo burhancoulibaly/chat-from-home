@@ -9,6 +9,9 @@ import { resolvers, typeDefs } from '../backend/resolvers/resolver';
 import { resolvers as authResolver, typeDefs as authTypeDefs } from '../backend/resolvers/auth-resolver';
 import Auth from '../backend/auth';
 import AuthDB from '../backend/db';
+import { firebaseConfig } from './config/config';
+import testFirebaseApp from 'firebase';
+require('firebase/auth');
 
 const MY_PROJECT_ID = serviceAccount.projectId;
 const testUser = "user_test";
@@ -22,14 +25,20 @@ const getFirestore = (auth: any) => {
     return firebase.initializeTestApp({projectId: MY_PROJECT_ID, auth: auth}).firestore();
 }
 
+function getFirebaseApp() {
+    return testFirebaseApp.initializeApp(firebaseConfig);
+}
+
 function getAdminFirestore() {
     return firebase.initializeAdminApp({ projectId: MY_PROJECT_ID }).firestore();
 }
 
+const auth = new Auth(serviceAccount)
+
 const apolloServer = new ApolloServer({
     typeDefs: [typeDefs, authTypeDefs], 
     resolvers: merge(resolvers, authResolver),
-    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: new Auth(serviceAccount).createAccessToken } })
+    context: async() => ({ db: new AuthDB(graphqlTestDB), auth: { createAccessToken: auth.createAccessToken, verifyToken: auth.verifyToken } })
 });
 
 const { query, mutate } = createTestClient(apolloServer);
@@ -256,6 +265,104 @@ describe("Chat from home GraphQL auth resolver", () => {
         await loginRef.delete();
         await emailRef.delete();
 
+        admin.app.delete();
+    })
+
+    it("Changes a users password given a token, email, and password", async() => {
+        const admin = getAdminFirestore();
+        const firebaseApp = getFirebaseApp();
+
+        const accessToken = await auth.createAccessToken(testUser);
+    
+        const userAuth = await firebaseApp.auth().signInWithCustomToken(accessToken)
+        const idToken = await userAuth.user?.getIdToken(true);
+
+        const userRef = admin.collection("user").doc(testUser);
+        const loginRef = admin.collection("login").doc(testUser);
+        const emailRef = admin.collection("email").doc(testEmail);
+
+        const saltRounds = 12;
+        const salt = await genSalt(saltRounds);
+        const hashedPassword = await hash(testPassword,salt);
+
+        await userRef.set({ email: `${testEmail}`, username: `${testUser}` });
+        await loginRef.set({ password: `${hashedPassword}` });
+        await emailRef.set({ username: `${testUser}` });
+
+        const PASSWORDRESET = gql(`
+            mutation passwordReset($idToken: String!, $email: String!, $password: String!) {
+                passwordReset(idToken: $idToken, email: $email, password: $password) {
+                    status,
+                    message,
+                    accessToken
+                }
+            }
+        `);
+
+        const res = await mutate({
+            mutation: PASSWORDRESET,
+            variables: { idToken: idToken, email: testEmail, password: testPassword+"1"} 
+        })
+
+        expect(res.data.passwordReset.status)
+            .toBe("Success");
+
+        await userAuth.user?.delete();
+
+        await userRef.delete();
+        await loginRef.delete();
+        await emailRef.delete();
+
+        firebaseApp.delete();
+        admin.app.delete();
+    })
+
+    it("Returns error if password user new password is same as old password", async() => {
+        const admin = getAdminFirestore();
+        const firebaseApp = getFirebaseApp();
+
+        const accessToken = await auth.createAccessToken(testUser);
+    
+        const userAuth = await firebaseApp.auth().signInWithCustomToken(accessToken)
+        const idToken = await userAuth.user?.getIdToken(true);
+
+        const userRef = admin.collection("user").doc(testUser);
+        const loginRef = admin.collection("login").doc(testUser);
+        const emailRef = admin.collection("email").doc(testEmail);
+
+        const saltRounds = 12;
+        const salt = await genSalt(saltRounds);
+        const hashedPassword = await hash(testPassword,salt);
+
+        await userRef.set({ email: `${testEmail}`, username: `${testUser}` });
+        await loginRef.set({ password: `${hashedPassword}` });
+        await emailRef.set({ username: `${testUser}` });
+
+        const PASSWORDRESET = gql(`
+            mutation passwordReset($idToken: String!, $email: String!, $password: String!) {
+                passwordReset(idToken: $idToken, email: $email, password: $password) {
+                    status,
+                    message,
+                    accessToken
+                }
+            }
+        `);
+
+        const res = await mutate({
+            mutation: PASSWORDRESET,
+            variables: { idToken: idToken, email: testEmail, password: testPassword } 
+        })
+
+        expect(res.data.passwordReset.status)
+            .toBe("Error");
+
+        await userAuth.user?.delete();
+
+        await userRef.delete();
+        await loginRef.delete();
+        await emailRef.delete();
+
+        firebaseApp.delete();
         admin.app.delete();
     })
 });

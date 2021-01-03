@@ -8,6 +8,23 @@ export default class AuthDB{
         this._db = db;
     }
 
+    //TODO: create unit test for this
+    public user(username: string){
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await this._db.collection('user').doc(username).get();
+                
+                if(user){
+                    return resolve(user.data());
+                }
+
+                return reject(new Error("User not found"));
+            } catch (error) {
+                return reject(error);
+            }
+        })
+    }
+
     public login(username: string, password: string){
         return new Promise(async (resolve, reject) => {
             try {
@@ -38,9 +55,9 @@ export default class AuthDB{
                 const hashedPassword = await hash(password,salt);
     
     
-                let userRef = this._db.collection('user').doc(username);
-                let loginRef = this._db.collection('login').doc(username);
-                let emailRef = this._db.collection('email').doc(email);
+                const userRef = this._db.collection('user').doc(username);
+                const loginRef = this._db.collection('login').doc(username);
+                const emailRef = this._db.collection('email').doc(email);
     
                 let response = (await userRef.get()).data();
                 
@@ -72,5 +89,42 @@ export default class AuthDB{
                 return reject(error);
             }
         });
+    }
+
+    public passwordReset(email: string, password: string){
+        return new Promise(async (resolve, reject) => {
+            try {
+                const saltRounds = 12;
+                const salt = await genSalt(saltRounds);
+                const hashedPassword = await hash(password,salt);
+
+                const emailRef = await (await this._db.collection('email').doc(email).get()).data();
+
+                if(!emailRef){
+                    return reject(new Error("User with that email doesn't exist"))
+                }
+                
+                const loginRef = this._db.collection('login').doc(emailRef.username);
+                const response = await (await loginRef.get()).data();
+
+                if(!response){
+                    return reject(new Error("User doesn't exist"))
+                }
+
+                if (!compareSync(password, response.password)){
+                    await loginRef.update({
+                        password: `${hashedPassword}`,
+                    })
+    
+                    return resolve({
+                        username: emailRef.username
+                    });
+                }else{
+                    return reject(new Error("You cannot use the same password"));
+                }
+            } catch (error) {
+                return reject(error);
+            }
+        })
     }
 }

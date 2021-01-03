@@ -1,4 +1,4 @@
-import express, { response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import { merge } from 'lodash';
 import { ApolloServer } from 'apollo-server-express';
@@ -10,7 +10,6 @@ import admin from "firebase-admin";
 import { serviceAccount } from './config/config';
 import Auth from './auth';
 import AuthDB from './db';
-import path from 'path'
 
 export const  app: express.Application = express();
 
@@ -37,7 +36,7 @@ export const auth = new Auth()
 export const apolloServer = new ApolloServer({
   typeDefs: [typeDefs, userTypeDefs], 
   resolvers: merge(resolvers, userResolver),
-  context: async() => ({ db: new AuthDB(adminApp.firestore()), auth: { createAccessToken: auth.createAccessToken } })
+  context: async() => ({ db: new AuthDB(adminApp.firestore()), auth: { createAccessToken: auth.createAccessToken, verifyToken: auth.verifyToken } })
 });
 
 app.use(cors(corsOptions))

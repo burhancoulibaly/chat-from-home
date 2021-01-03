@@ -3,7 +3,7 @@ import { serviceAccount } from './config/config';
 import Auth from '../backend/auth';
 import { firebaseConfig } from './config/config';
 import testFirebaseApp from 'firebase';
-require('firebase/auth')
+require('firebase/auth');
 
 const testUser1 = "user_test1";
 let auth = new Auth(serviceAccount);

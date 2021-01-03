@@ -4,7 +4,7 @@
   "description": "",
   "main": "./dist/backend/server.js",
   "scripts": {
-    "test": "jest",
+    "test": "firebase emulators:exec --project chat-from-home --only firestore 'jest'",
     "start:dev": "nodemon",
     "build": "rimraf ./dist && tsc",
     "start": "npm run build && node dist/src/backend/server.js",

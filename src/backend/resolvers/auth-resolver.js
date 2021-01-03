@@ -4,11 +4,24 @@
 export const typeDefs = `
     extend type Query {
         login(username: String!, password: String!): LoginResponse!
+        user(idToken: String!): User!
         test: String!
     }
 
     extend type Mutation {
         register(username: String!, email: String!, password: String!): LoginResponse!
+        passwordReset(idToken: String!, email: String!, password: String!): LoginResponse
+    }
+
+    type User {
+        status: String!
+        message: String!
+        user: UserData
+    }
+
+    type UserData {
+        email: String,
+        username: String
     }
 
     type LoginResponse {
@@ -39,6 +52,31 @@ export const resolvers = {
                 }
             }
         },
+        // TODO: create unit test for this
+        user: async(_, { idToken }, { auth, db }) => {
+            try {
+                const idTokenResult = await auth.verifyToken(idToken)
+
+                const response = await db.user(idTokenResult.uid);
+
+                if(response){
+                    return {
+                        status: "Success",
+                        message: "User Found",
+                        user: {
+                            email: response.email,
+                            username: response.username
+                        }
+                    }
+                }   
+            } catch (error) {
+                return {
+                    status: error.toString().split(":")[0].replace(" ",""),
+                    message: error.toString().split(":")[1].replace(" ",""),
+                    user: null
+                }
+            } 
+        },
         test: async(_, { }, { db, auth }) => {
             return "hello";
         }
@@ -52,7 +90,7 @@ export const resolvers = {
                 if(response){
                     return {
                         status: "Success",
-                        message: "Login successful",
+                        message: "Registration successful",
                         accessToken: `${await auth.createAccessToken(username)}`
                     }
                 } 
@@ -62,6 +100,30 @@ export const resolvers = {
                     message: "Invalid login",
                     accessToken: ""
                 }
+            } catch (error) {
+                return {
+                    status: error.toString().split(":")[0].replace(" ",""),
+                    message: error.toString().split(":")[1].replace(" ",""),
+                    accessToken: ""
+                }
+            }
+        },
+        passwordReset: async(_, { idToken, email, password }, {auth, db}) => {
+            try {
+                const idTokenResult = await auth.verifyToken(idToken)
+                    if(idTokenResult){
+                        let response = await db.passwordReset(email, password);
+                    
+                    if(response){
+                        return {
+                            status: "Success",
+                            message: "Password reset successful",
+                            accessToken: `${await auth.createAccessToken(response.username)}`
+                        }
+                    }
+                }
+                 
+                throw new Error("Invalid token")
             } catch (error) {
                 return {
                     status: error.toString().split(":")[0].replace(" ",""),
