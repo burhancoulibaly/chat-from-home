@@ -18,7 +18,7 @@ jobs:
       - run:
           name: "Start firebase emulators and test"
           command: |
-            firebase emulators:exec --project chat-from-home --only firestore "npm test"
+            npm test
 
 workflows:
   Chat_From_Home_Test:
