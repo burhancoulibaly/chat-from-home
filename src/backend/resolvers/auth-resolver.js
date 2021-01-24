@@ -10,6 +10,7 @@ export const typeDefs = `
 
     extend type Mutation {
         register(username: String!, email: String!, password: String!): LoginResponse!
+        emailChange(idToken: String!, email1: String!, email2: String!): LoginResponse
         passwordReset(idToken: String!, email: String!, password: String!): LoginResponse
     }
 
@@ -108,11 +109,37 @@ export const resolvers = {
                 }
             }
         },
+        emailChange: async(_, { idToken, email1, email2 }, {auth, db}) => {
+            try {
+                const idTokenResult = await auth.verifyToken(idToken);
+
+                if(idTokenResult){
+                    let response = await db.emailChange(email1, email2);
+                    
+                    if(response){
+                        return {
+                            status: "Success",
+                            message: "Email change successful",
+                            accessToken: `${await auth.createAccessToken(response.username)}`
+                        }
+                    }
+                }
+                 
+                throw new Error("Invalid token")
+            } catch (error) {
+                return {
+                    status: error.toString().split(":")[0].replace(" ",""),
+                    message: error.toString().split(":")[1].replace(" ",""),
+                    accessToken: ""
+                }
+            }
+        },
         passwordReset: async(_, { idToken, email, password }, {auth, db}) => {
             try {
-                const idTokenResult = await auth.verifyToken(idToken)
-                    if(idTokenResult){
-                        let response = await db.passwordReset(email, password);
+                const idTokenResult = await auth.verifyToken(idToken);
+
+                if(idTokenResult){
+                    let response = await db.passwordReset(email, password);
                     
                     if(response){
                         return {

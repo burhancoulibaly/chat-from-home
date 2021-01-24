@@ -91,6 +91,50 @@ export default class AuthDB{
         });
     }
 
+    public emailChange(email1: string, email2: string){
+        return new Promise(async (resolve, reject) => {
+            try {
+                const emailRef = this._db.collection('email').doc(email1);
+                const responseEmail = await (await emailRef.get()).data();
+
+                if(!responseEmail){
+                    return reject(new Error("User with that email doesn't exist"))
+                }
+
+                const username = responseEmail.username;
+                const loginRef = this._db.collection('login').doc(username);
+                const responseLogin = await (await loginRef.get()).data();
+
+                if(!responseLogin){
+                    return reject(new Error("User doesn't exist"))
+                }
+
+                if (email1 !== email2){
+                    const userRef = this._db.collection('user').doc(username);
+                    const newEmailRef = this._db.collection('email').doc(email2);
+
+                    await userRef.update({
+                        email: `${email2}`,
+                    })
+
+                    await newEmailRef.set({
+                        username: `${username}`
+                    })
+
+                    emailRef.delete();
+    
+                    return resolve({
+                        username: username
+                    });
+                }else{
+                    return reject(new Error("You cannot use the same email"));
+                }
+            } catch (error) {
+                return reject(error);
+            }
+        })
+    }
+
     public passwordReset(email: string, password: string){
         return new Promise(async (resolve, reject) => {
             try {

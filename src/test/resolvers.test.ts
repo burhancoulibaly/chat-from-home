@@ -17,6 +17,7 @@ const MY_PROJECT_ID = serviceAccount.projectId;
 const testUser = "user_test";
 const testFakeUser = "fake_user_test"; 
 const testEmail = "user.test@gmail.com";
+const testFakeEmail = "user_test@gmail.com"
 const testPassword = "password123";
 const testFakePassword = "fakepassword123";
 const graphqlTestDB = getAdminFirestore();
@@ -354,6 +355,104 @@ describe("Chat from home GraphQL auth resolver", () => {
         })
 
         expect(res.data.passwordReset.status)
+            .toBe("Error");
+
+        await userAuth.user?.delete();
+
+        await userRef.delete();
+        await loginRef.delete();
+        await emailRef.delete();
+
+        firebaseApp.delete();
+        admin.app.delete();
+    })
+
+    it("Changes a users email given a token, the original email address, and a new email", async() => {
+        const admin = getAdminFirestore();
+        const firebaseApp = getFirebaseApp();
+
+        const accessToken = await auth.createAccessToken(testUser);
+    
+        const userAuth = await firebaseApp.auth().signInWithCustomToken(accessToken)
+        const idToken = await userAuth.user?.getIdToken(true);
+
+        const userRef = admin.collection("user").doc(testUser);
+        const loginRef = admin.collection("login").doc(testUser);
+        const emailRef = admin.collection("email").doc(testEmail);
+
+        const saltRounds = 12;
+        const salt = await genSalt(saltRounds);
+        const hashedPassword = await hash(testPassword,salt);
+
+        await userRef.set({ email: `${testEmail}`, username: `${testUser}` });
+        await loginRef.set({ password: `${hashedPassword}` });
+        await emailRef.set({ username: `${testUser}` });
+
+        const EMAILCHANGE = gql(`
+            mutation emailChange($idToken: String!, $email1: String!, $email2: String!) {
+                emailChange(idToken: $idToken, email1: $email1, email2: $email2) {
+                    status,
+                    message,
+                    accessToken
+                }
+            }
+        `);
+
+        const res = await mutate({
+            mutation: EMAILCHANGE,
+            variables: { idToken: idToken, email1: testEmail, email2: testFakeEmail} 
+        })
+
+        expect(res.data.emailChange.status)
+            .toBe("Success");
+
+        await userAuth.user?.delete();
+
+        await userRef.delete();
+        await loginRef.delete();
+        await emailRef.delete();
+
+        firebaseApp.delete();
+        admin.app.delete();
+    })
+
+    it("Returns error if new email is same as old email", async() => {
+        const admin = getAdminFirestore();
+        const firebaseApp = getFirebaseApp();
+
+        const accessToken = await auth.createAccessToken(testUser);
+    
+        const userAuth = await firebaseApp.auth().signInWithCustomToken(accessToken)
+        const idToken = await userAuth.user?.getIdToken(true);
+
+        const userRef = admin.collection("user").doc(testUser);
+        const loginRef = admin.collection("login").doc(testUser);
+        const emailRef = admin.collection("email").doc(testEmail);
+
+        const saltRounds = 12;
+        const salt = await genSalt(saltRounds);
+        const hashedPassword = await hash(testPassword,salt);
+
+        await userRef.set({ email: `${testEmail}`, username: `${testUser}` });
+        await loginRef.set({ password: `${hashedPassword}` });
+        await emailRef.set({ username: `${testUser}` });
+
+        const EMAILCHANGE = gql(`
+            mutation emailChange($idToken: String!, $email1: String!, $email2: String!) {
+                emailChange(idToken: $idToken, email1: $email1, email2: $email2) {
+                    status,
+                    message,
+                    accessToken
+                }
+            }
+        `);
+
+        const res = await mutate({
+            mutation: EMAILCHANGE,
+            variables: { idToken: idToken, email1: testEmail, email2: testEmail} 
+        })
+
+        expect(res.data.emailChange.status)
             .toBe("Error");
 
         await userAuth.user?.delete();
